@@ -7,13 +7,13 @@
   <style>
     :root {
       --bg: #0f0b0d;
-      --panel: rgba(23, 17, 20, 0.82);
-      --panel-soft: rgba(255, 255, 255, 0.05);
-      --border: rgba(255, 255, 255, 0.12);
-      --text: #efe5e1;
-      --muted: #d8c7c2;
+      --text: #f3e9e4;
+      --muted: #dccbc6;
+      --soft: #cdbbb5;
       --accent: #f5e7e2;
-      --dark: #120d10;
+      --line: rgba(255,255,255,0.14);
+      --line-soft: rgba(255,255,255,0.08);
+      --shadow: rgba(0,0,0,0.45);
     }
 
     * {
@@ -33,6 +33,17 @@
       overflow-x: hidden;
     }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
     .background-image {
       position: fixed;
       inset: 0;
@@ -41,118 +52,163 @@
       background-position: center;
       background-repeat: no-repeat;
       z-index: 0;
+      transform: scale(1.03);
     }
 
     .background-overlay {
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle at top, rgba(255, 240, 245, 0.16), transparent 28%),
-        radial-gradient(circle at bottom, rgba(214, 189, 180, 0.12), transparent 30%),
-        linear-gradient(180deg, rgba(15, 11, 13, 0.58), rgba(15, 11, 13, 0.82));
       z-index: 1;
       pointer-events: none;
+      background:
+        radial-gradient(circle at top, rgba(255,240,245,0.18), transparent 32%),
+        radial-gradient(circle at bottom, rgba(214,189,180,0.14), transparent 34%),
+        linear-gradient(180deg, rgba(10,8,9,0.44), rgba(10,8,9,0.72) 45%, rgba(10,8,9,0.9));
     }
 
     .background-grid {
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 28px 28px;
-      opacity: 0.08;
       z-index: 2;
       pointer-events: none;
+      opacity: 0.06;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, transparent, black 15%, black 85%, transparent);
+    }
+
+    .glow-top,
+    .glow-bottom {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.35;
+    }
+
+    .glow-top {
+      width: 420px;
+      height: 420px;
+      top: -120px;
+      left: 6%;
+      background: rgba(255, 227, 234, 0.12);
+    }
+
+    .glow-bottom {
+      width: 460px;
+      height: 460px;
+      bottom: -180px;
+      right: 4%;
+      background: rgba(211, 182, 173, 0.1);
     }
 
     .site-shell {
       position: relative;
       z-index: 3;
-      max-width: 1200px;
+      max-width: 1220px;
       margin: 0 auto;
-      padding: 24px 20px 64px;
+      padding: 28px 20px 80px;
     }
 
     .site-header {
-      border: 1px solid var(--border);
-      background: rgba(23, 17, 20, 0.68);
-      backdrop-filter: blur(18px);
-      border-radius: 38px;
-      padding: 20px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+      position: relative;
+      margin-bottom: 28px;
+      text-align: center;
     }
 
-    .header-grid {
-      display: grid;
-      gap: 24px;
-      align-items: end;
-    }
-
-    .logo-frame {
-      min-height: 140px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      border-radius: 28px;
-      padding: 24px;
+    .logo-wrap {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      min-height: 120px;
+      margin-bottom: 24px;
     }
 
-    .logo-frame img {
-      max-height: 120px;
+    .logo-wrap img {
+      max-width: min(90vw, 620px);
+      max-height: 170px;
       width: auto;
-      object-fit: contain;
+      height: auto;
       display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 34px rgba(0,0,0,0.58));
     }
 
     .tabs {
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
       gap: 12px;
     }
 
     .tab-button {
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.03);
-      color: #e3d5cf;
+      appearance: none;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid var(--line-soft);
+      color: #efe2dd;
       border-radius: 999px;
-      padding: 14px 18px;
+      padding: 12px 18px;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.28em;
       font-size: 10px;
       cursor: pointer;
-      transition: 0.25s ease;
+      transition:
+        transform 0.22s ease,
+        background 0.22s ease,
+        border-color 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.16);
     }
 
-    .tab-button:hover,
+    .tab-button:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+    }
+
     .tab-button.active {
       background: var(--accent);
-      color: var(--dark);
+      color: #120d10;
       border-color: var(--accent);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.22);
     }
 
     .tab-panel {
-      margin-top: 32px;
+      position: relative;
+      min-height: 520px;
     }
 
     .panel {
       display: none;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      backdrop-filter: blur(18px);
-      border-radius: 34px;
-      padding: 24px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.32);
+      position: relative;
+      animation: fadeUp 0.45s ease;
     }
 
     .panel.active {
       display: block;
     }
 
-    .panel-header {
-      margin-bottom: 28px;
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -12px -10px;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.18), transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-header {
+      margin-bottom: 26px;
     }
 
     .eyebrow {
@@ -160,69 +216,97 @@
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.38em;
-      color: #bdaea8;
+      color: #c5b4ae;
     }
 
-    .panel-title {
-      margin: 12px 0 0;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      color: #fff5f2;
+    .section-title {
+      margin: 10px 0 0;
+      color: #fff6f2;
       font-family: "Snell Roundhand", "Apple Chancery", cursive;
       font-weight: 400;
+      font-size: clamp(2.1rem, 5vw, 4rem);
+      line-height: 1;
+      text-shadow: 0 6px 22px rgba(0,0,0,0.28);
     }
 
     .home-grid,
     .contact-grid {
       display: grid;
-      gap: 28px;
+      gap: 34px;
     }
 
-    .video-frame,
-    .card,
-    .contact-card,
+    .mist-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      box-shadow:
+        0 20px 80px rgba(0,0,0,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .hero-video,
+    .release-side,
+    .show-row,
+    .offering-card,
+    .video-thumb,
+    .contact-block,
+    .contact-form,
     .mailing-list {
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      background: rgba(255, 255, 255, 0.04);
-      overflow: hidden;
+      border-radius: 30px;
     }
 
-    .video-frame iframe {
-      display: block;
+    .hero-video {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-video iframe {
       width: 100%;
       aspect-ratio: 16 / 9;
       border: 0;
+      display: block;
     }
 
-    .card {
-      padding: 24px;
+    .hero-video::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, transparent 38%, rgba(0,0,0,0.18)),
+        linear-gradient(180deg, rgba(255,255,255,0.04), transparent 18%, transparent 84%, rgba(0,0,0,0.15));
+    }
+
+    .release-side {
+      padding: 28px;
     }
 
     .pill-label {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 999px;
       padding: 8px 12px;
+      border-radius: 999px;
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.35em;
-      color: #cebdb8;
+      color: #d5c3bd;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
     }
 
     .release-title {
-      margin: 20px 0 0;
-      font-size: clamp(2.1rem, 4vw, 3.2rem);
-      font-weight: 600;
+      margin: 18px 0 0;
+      color: #fff7f4;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      color: #fff7f4;
+      text-shadow: 0 8px 24px rgba(0,0,0,0.22);
     }
 
     .release-grid {
-      margin-top: 28px;
+      margin-top: 26px;
       display: grid;
       gap: 24px;
       align-items: center;
@@ -231,12 +315,17 @@
     .cover-link {
       position: relative;
       display: block;
+      border-radius: 28px;
       overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      background: #000;
-      text-decoration: none;
-      color: inherit;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #080607;
+      transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.24);
+    }
+
+    .cover-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 44px rgba(0,0,0,0.28);
     }
 
     .cover-placeholder {
@@ -245,20 +334,36 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
+      background: linear-gradient(180deg, #2a1d23 0%, #0d090b 100%);
       text-align: center;
       text-transform: uppercase;
-      letter-spacing: 0.3em;
+      letter-spacing: 0.28em;
       font-size: 12px;
-      color: #cbbdb5;
-      background: linear-gradient(180deg, #2a1d23 0%, #0d090b 100%);
+      color: #d6c6bf;
+    }
+
+    .cover-placeholder::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.07), transparent 18%),
+        radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), transparent 24%);
+      pointer-events: none;
+    }
+
+    .cover-placeholder > span:first-child {
+      position: relative;
+      z-index: 2;
+      padding: 0 10px;
     }
 
     .rabbit-sparkles {
       position: absolute;
       inset: 0;
       opacity: 0;
-      transition: opacity 0.45s ease;
+      transition: opacity 0.5s ease;
       pointer-events: none;
     }
 
@@ -270,8 +375,8 @@
       position: absolute;
       border-radius: 999px;
       background: rgba(255,255,255,0.95);
-      box-shadow: 0 0 14px rgba(255,255,255,0.7);
-      animation: twinkle 1.5s infinite ease-in-out;
+      box-shadow: 0 0 16px rgba(255,255,255,0.8);
+      animation: twinkle 1.55s infinite ease-in-out;
     }
 
     .spark.one { left: 26%; top: 24%; width: 8px; height: 8px; }
@@ -290,7 +395,7 @@
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.35em;
-      color: #bfaea8;
+      color: #c1b0aa;
     }
 
     .button-row {
@@ -305,53 +410,79 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
       border-radius: 999px;
-      padding: 14px 18px;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 0.32em;
-      font-size: 10px;
-      transition: 0.25s ease;
-      cursor: pointer;
       border: 1px solid rgba(255,255,255,0.15);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      backdrop-filter: blur(6px);
     }
 
     .ghost-button {
-      color: #eadcd6;
-      background: transparent;
+      color: #ecdfd9;
+      background: rgba(255,255,255,0.02);
     }
 
     .ghost-button:hover {
       background: white;
       color: black;
+      transform: translateY(-1px);
     }
 
     .solid-button {
-      border-color: var(--accent);
+      color: #120d10;
       background: var(--accent);
-      color: var(--dark);
+      border-color: var(--accent);
+    }
+
+    .solid-button:hover {
+      transform: translateY(-1px);
     }
 
     .section-list,
     .offerings-grid,
     .video-list {
       display: grid;
-      gap: 18px;
+      gap: 20px;
     }
 
     .show-row,
     .offering-card,
     .video-thumb,
-    .contact-card {
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      background: rgba(255,255,255,0.04);
+    .contact-block,
+    .contact-form,
+    .mailing-list {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .show-row,
+    .offering-card,
+    .contact-block,
+    .contact-form,
+    .mailing-list {
+      padding: 22px;
+    }
+
+    .show-row,
+    .offering-card,
+    .contact-block,
+    .contact-form,
+    .mailing-list,
+    .release-side {
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
     }
 
     .show-row {
       display: grid;
       gap: 18px;
-      padding: 20px;
       align-items: center;
     }
 
@@ -359,38 +490,32 @@
       font-size: 14px;
       text-transform: uppercase;
       letter-spacing: 0.3em;
-      color: #f3e8e3;
+      color: #f1e7e2;
     }
 
     .show-city {
       font-size: 16px;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      color: #fff6f2;
+      color: #fff5f1;
     }
 
-    .show-venue,
-    .contact-lines p,
-    .offering-card p {
-      margin: 6px 0 0;
+    .show-venue {
+      margin-top: 6px;
       font-size: 14px;
       line-height: 1.8;
-      color: #d0bfba;
+      color: #d1c0bb;
     }
 
     .offerings-grid {
       grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
-    .offering-card {
-      padding: 16px;
-    }
-
     .offering-image {
       aspect-ratio: 1 / 1;
-      border-radius: 20px;
-      border: 1px solid var(--border);
+      border-radius: 24px;
       background: linear-gradient(180deg, #251a20 0%, #100b0d 100%);
+      border: 1px solid rgba(255,255,255,0.08);
       margin-bottom: 16px;
     }
 
@@ -398,7 +523,7 @@
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.35em;
-      color: #b9aaa4;
+      color: #baa9a3;
     }
 
     .offering-title {
@@ -407,6 +532,13 @@
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: #fff4f1;
+    }
+
+    .offering-card p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #d0bfba;
     }
 
     .offering-footer {
@@ -426,10 +558,14 @@
 
     .video-thumb {
       display: block;
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
       background: #000;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 54px rgba(0,0,0,0.22);
+      transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+
+    .video-thumb:hover {
+      transform: translateY(-2px);
     }
 
     .video-thumb-inner {
@@ -441,8 +577,8 @@
     .video-thumb img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
       display: block;
+      object-fit: cover;
       opacity: 0.95;
       transition: transform 0.35s ease;
     }
@@ -464,10 +600,11 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(10px);
       padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.52);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .watch-icon {
@@ -490,75 +627,70 @@
       color: rgba(255,255,255,0.9);
     }
 
-    .contact-card,
-    .contact-form {
-      padding: 24px;
-    }
-
     .contact-lines p {
       margin: 0 0 14px;
+      color: #d8c7c2;
+      font-size: 14px;
+      line-height: 1.9;
     }
 
     .contact-lines strong {
       color: #fff5f1;
+      font-weight: 600;
     }
 
     .contact-form {
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      background: rgba(255,255,255,0.04);
       display: grid;
       gap: 16px;
     }
 
     .contact-form input,
     .contact-form textarea,
-    .mailing-list input {
+    .mailing-form input {
       width: 100%;
       border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.25);
+      background: rgba(0,0,0,0.2);
       color: white;
+      outline: none;
       padding: 14px 18px;
       font-size: 14px;
-      outline: none;
     }
 
     .contact-form input,
-    .mailing-list input {
+    .mailing-form input {
       border-radius: 999px;
     }
 
     .contact-form textarea {
-      border-radius: 22px;
-      resize: vertical;
       min-height: 150px;
+      border-radius: 24px;
+      resize: vertical;
     }
 
     .mailing-list {
-      margin-top: 28px;
-      padding: 20px;
+      margin-top: 30px;
     }
 
     .mailing-grid {
       display: grid;
-      gap: 18px;
+      gap: 20px;
       align-items: end;
     }
 
     .mailing-title {
-      margin: 12px 0 0;
-      font-size: clamp(1.8rem, 4vw, 2.3rem);
-      color: #fff5f2;
+      margin: 10px 0 0;
       font-family: "Snell Roundhand", "Apple Chancery", cursive;
       font-weight: 400;
+      font-size: clamp(1.9rem, 4vw, 2.5rem);
+      color: #fff5f2;
     }
 
     .mailing-copy {
       margin: 12px 0 0;
-      max-width: 700px;
+      max-width: 760px;
       font-size: 14px;
       line-height: 1.8;
-      color: var(--muted);
+      color: #d8c7c2;
     }
 
     .mailing-form {
@@ -567,22 +699,29 @@
     }
 
     @keyframes twinkle {
-      0%, 100% { transform: scale(0.7); opacity: 0.3; }
-      50% { transform: scale(1.15); opacity: 1; }
+      0%, 100% { transform: scale(0.72); opacity: 0.3; }
+      50% { transform: scale(1.18); opacity: 1; }
     }
 
-    @media (min-width: 768px) {
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 760px) {
       .site-shell {
-        padding: 32px 32px 72px;
+        padding: 34px 28px 82px;
       }
 
-      .panel {
-        padding: 32px;
-      }
-
-      .release-grid,
       .home-grid,
       .contact-grid,
+      .release-grid,
       .mailing-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -591,20 +730,16 @@
         grid-template-columns: 120px 1fr auto;
       }
 
-      .offerings-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
       .mailing-form {
         grid-template-columns: 1fr auto;
+      }
+
+      .offerings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (min-width: 1100px) {
-      .header-grid {
-        grid-template-columns: 1fr auto;
-      }
-
       .offerings-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
@@ -615,316 +750,332 @@
   <div class="background-image"></div>
   <div class="background-overlay"></div>
   <div class="background-grid"></div>
+  <div class="glow-top"></div>
+  <div class="glow-bottom"></div>
 
   <div class="site-shell" data-testid="artist-site-root">
     <header class="site-header" data-testid="site-header">
-      <div class="header-grid">
-        <div class="logo-frame">
-          <img src="logo.png" alt="ALYSSAD logo" />
-        </div>
-
-        <nav class="tabs" data-testid="site-tabs" aria-label="Site tabs">
-          <button class="tab-button active" data-tab="home">Home</button>
-          <button class="tab-button" data-tab="tour">Live Shows</button>
-          <button class="tab-button" data-tab="merch">Merch</button>
-          <button class="tab-button" data-tab="videos">Videos</button>
-          <button class="tab-button" data-tab="contact">Contact</button>
-        </nav>
+      <div class="logo-wrap">
+        <img src="logo.png" alt="ALYSSAD logo" />
       </div>
+
+      <nav class="tabs" data-testid="site-tabs" aria-label="Site tabs">
+        <button class="tab-button active" data-tab="home">Home</button>
+        <button class="tab-button" data-tab="tour">Live Shows</button>
+        <button class="tab-button" data-tab="merch">Merch</button>
+        <button class="tab-button" data-tab="videos">Videos</button>
+        <button class="tab-button" data-tab="contact">Contact</button>
+      </nav>
     </header>
 
     <main class="tab-panel" data-testid="tab-panel">
       <section class="panel active" id="home" data-testid="home-tab-content">
-        <div class="home-grid">
-          <div class="video-frame">
-            <iframe
-              src="https://www.youtube.com/embed/vb19H-Su5Hs?autoplay=1&mute=1&controls=0&loop=1&playlist=vb19H-Su5Hs&modestbranding=1&rel=0&playsinline=1"
-              title="Holy Ghost music video preview"
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
+        <div class="panel-inner">
+          <div class="home-grid">
+            <div class="hero-video mist-panel">
+              <iframe
+                src="https://www.youtube.com/embed/vb19H-Su5Hs?autoplay=1&mute=1&controls=0&loop=1&playlist=vb19H-Su5Hs&modestbranding=1&rel=0&playsinline=1"
+                title="Holy Ghost music video preview"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
 
-          <div class="card">
-            <div class="pill-label">▶ latest release</div>
-            <h2 class="release-title">COOL GIRL</h2>
+            <div class="release-side">
+              <div class="pill-label">▶ latest release</div>
+              <h2 class="release-title">COOL GIRL</h2>
 
-            <div class="release-grid">
-              <a class="cover-link" href="#" aria-label="Open COOL GIRL streaming page">
-                <div class="cover-placeholder">
-                  <span>cool girl cover art</span>
-                  <div class="rabbit-sparkles" aria-hidden="true">
-                    <span class="spark one"></span>
-                    <span class="spark two"></span>
-                    <span class="spark three"></span>
-                    <span class="spark four"></span>
-                    <span class="spark five"></span>
-                    <span class="spark six"></span>
-                    <span class="spark seven"></span>
-                    <span class="spark eight"></span>
-                    <span class="spark nine"></span>
-                    <span class="spark ten"></span>
-                    <span class="spark eleven"></span>
+              <div class="release-grid">
+                <a class="cover-link" href="#" aria-label="Open COOL GIRL streaming page">
+                  <div class="cover-placeholder">
+                    <span>cool girl cover art</span>
+
+                    <div class="rabbit-sparkles" aria-hidden="true">
+                      <span class="spark one"></span>
+                      <span class="spark two"></span>
+                      <span class="spark three"></span>
+                      <span class="spark four"></span>
+                      <span class="spark five"></span>
+                      <span class="spark six"></span>
+                      <span class="spark seven"></span>
+                      <span class="spark eight"></span>
+                      <span class="spark nine"></span>
+                      <span class="spark ten"></span>
+                      <span class="spark eleven"></span>
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
 
-              <div>
-                <div class="listen-label">listen</div>
-                <div class="button-row">
-                  <a class="ghost-button" href="#">spotify</a>
-                  <a class="ghost-button" href="#">apple music</a>
-                  <a class="ghost-button" href="#">youtube</a>
+                <div>
+                  <div class="listen-label">listen</div>
+                  <div class="button-row">
+                    <a class="ghost-button" href="#">spotify</a>
+                    <a class="ghost-button" href="#">apple music</a>
+                    <a class="ghost-button" href="#">youtube</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="mailing-list" data-testid="mailing-list">
-          <div class="mailing-grid">
-            <div>
-              <p class="eyebrow">mailing list</p>
-              <h3 class="mailing-title">Stay close</h3>
-              <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+          <div class="mailing-list" data-testid="mailing-list">
+            <div class="mailing-grid">
+              <div>
+                <p class="eyebrow">mailing list</p>
+                <h3 class="mailing-title">Stay close</h3>
+                <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+              </div>
+
+              <form class="mailing-form" data-testid="mailing-list-form">
+                <input type="email" placeholder="enter your email" />
+                <button type="button" class="solid-button">sign up</button>
+              </form>
             </div>
-            <form class="mailing-form" data-testid="mailing-list-form">
-              <input type="email" placeholder="enter your email" />
-              <button type="button" class="solid-button">sign up</button>
-            </form>
           </div>
         </div>
       </section>
 
       <section class="panel" id="tour" data-testid="tour-list">
-        <div class="panel-header">
-          <p class="eyebrow">live shows</p>
-          <h2 class="panel-title">Live Shows</h2>
-        </div>
-
-        <div class="section-list">
-          <div class="show-row">
-            <div class="show-date">APR 18</div>
-            <div>
-              <div class="show-city">Los Angeles, CA</div>
-              <div class="show-venue">The Echo</div>
-            </div>
-            <button class="ghost-button" type="button">tickets</button>
+        <div class="panel-inner">
+          <div class="section-header">
+            <p class="eyebrow">live shows</p>
+            <h2 class="section-title">Live Shows</h2>
           </div>
 
-          <div class="show-row">
-            <div class="show-date">MAY 02</div>
-            <div>
-              <div class="show-city">Santa Ana, CA</div>
-              <div class="show-venue">Constellation Room</div>
+          <div class="section-list">
+            <div class="show-row">
+              <div class="show-date">APR 18</div>
+              <div>
+                <div class="show-city">Los Angeles, CA</div>
+                <div class="show-venue">The Echo</div>
+              </div>
+              <button class="ghost-button" type="button">tickets</button>
             </div>
-            <button class="ghost-button" type="button">tickets</button>
+
+            <div class="show-row">
+              <div class="show-date">MAY 02</div>
+              <div>
+                <div class="show-city">Santa Ana, CA</div>
+                <div class="show-venue">Constellation Room</div>
+              </div>
+              <button class="ghost-button" type="button">tickets</button>
+            </div>
+
+            <div class="show-row">
+              <div class="show-date">MAY 23</div>
+              <div>
+                <div class="show-city">San Diego, CA</div>
+                <div class="show-venue">Soda Bar</div>
+              </div>
+              <button class="ghost-button" type="button">tickets</button>
+            </div>
+
+            <div class="show-row">
+              <div class="show-date">JUN 07</div>
+              <div>
+                <div class="show-city">Phoenix, AZ</div>
+                <div class="show-venue">Valley Bar</div>
+              </div>
+              <button class="ghost-button" type="button">tickets</button>
+            </div>
           </div>
 
-          <div class="show-row">
-            <div class="show-date">MAY 23</div>
-            <div>
-              <div class="show-city">San Diego, CA</div>
-              <div class="show-venue">Soda Bar</div>
-            </div>
-            <button class="ghost-button" type="button">tickets</button>
-          </div>
+          <div class="mailing-list">
+            <div class="mailing-grid">
+              <div>
+                <p class="eyebrow">mailing list</p>
+                <h3 class="mailing-title">Stay close</h3>
+                <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+              </div>
 
-          <div class="show-row">
-            <div class="show-date">JUN 07</div>
-            <div>
-              <div class="show-city">Phoenix, AZ</div>
-              <div class="show-venue">Valley Bar</div>
+              <form class="mailing-form">
+                <input type="email" placeholder="enter your email" />
+                <button type="button" class="solid-button">sign up</button>
+              </form>
             </div>
-            <button class="ghost-button" type="button">tickets</button>
-          </div>
-        </div>
-
-        <div class="mailing-list">
-          <div class="mailing-grid">
-            <div>
-              <p class="eyebrow">mailing list</p>
-              <h3 class="mailing-title">Stay close</h3>
-              <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
-            </div>
-            <form class="mailing-form">
-              <input type="email" placeholder="enter your email" />
-              <button type="button" class="solid-button">sign up</button>
-            </form>
           </div>
         </div>
       </section>
 
       <section class="panel" id="merch" data-testid="merch-grid">
-        <div class="panel-header">
-          <p class="eyebrow">merch</p>
-          <h2 class="panel-title">Offerings</h2>
-        </div>
+        <div class="panel-inner">
+          <div class="section-header">
+            <p class="eyebrow">merch</p>
+            <h2 class="section-title">Offerings</h2>
+          </div>
 
-        <div class="offerings-grid">
-          <div class="offering-card">
-            <div class="offering-image"></div>
-            <div class="offering-tag">artifact</div>
-            <h3 class="offering-title">Holy Ghost Lace Tee</h3>
-            <p>soft black cotton / faded print</p>
-            <div class="offering-footer">
-              <span class="price">$38</span>
-              <button class="ghost-button" type="button">shop</button>
+          <div class="offerings-grid">
+            <div class="offering-card">
+              <div class="offering-image"></div>
+              <div class="offering-tag">artifact</div>
+              <h3 class="offering-title">Holy Ghost Lace Tee</h3>
+              <p>soft black cotton / faded print</p>
+              <div class="offering-footer">
+                <span class="price">$38</span>
+                <button class="ghost-button" type="button">shop</button>
+              </div>
+            </div>
+
+            <div class="offering-card">
+              <div class="offering-image"></div>
+              <div class="offering-tag">artifact</div>
+              <h3 class="offering-title">Porcelain Heart Poster</h3>
+              <p>18x24 satin finish</p>
+              <div class="offering-footer">
+                <span class="price">$25</span>
+                <button class="ghost-button" type="button">shop</button>
+              </div>
+            </div>
+
+            <div class="offering-card">
+              <div class="offering-image"></div>
+              <div class="offering-tag">artifact</div>
+              <h3 class="offering-title">White Rabbit Baby Tee</h3>
+              <p>cream ribbed cotton</p>
+              <div class="offering-footer">
+                <span class="price">$34</span>
+                <button class="ghost-button" type="button">shop</button>
+              </div>
+            </div>
+
+            <div class="offering-card">
+              <div class="offering-image"></div>
+              <div class="offering-tag">artifact</div>
+              <h3 class="offering-title">Mourning Ribbon Tote</h3>
+              <p>heavy canvas / embroidered</p>
+              <div class="offering-footer">
+                <span class="price">$30</span>
+                <button class="ghost-button" type="button">shop</button>
+              </div>
             </div>
           </div>
 
-          <div class="offering-card">
-            <div class="offering-image"></div>
-            <div class="offering-tag">artifact</div>
-            <h3 class="offering-title">Porcelain Heart Poster</h3>
-            <p>18x24 satin finish</p>
-            <div class="offering-footer">
-              <span class="price">$25</span>
-              <button class="ghost-button" type="button">shop</button>
-            </div>
-          </div>
+          <div class="mailing-list">
+            <div class="mailing-grid">
+              <div>
+                <p class="eyebrow">mailing list</p>
+                <h3 class="mailing-title">Stay close</h3>
+                <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+              </div>
 
-          <div class="offering-card">
-            <div class="offering-image"></div>
-            <div class="offering-tag">artifact</div>
-            <h3 class="offering-title">White Rabbit Baby Tee</h3>
-            <p>cream ribbed cotton</p>
-            <div class="offering-footer">
-              <span class="price">$34</span>
-              <button class="ghost-button" type="button">shop</button>
+              <form class="mailing-form">
+                <input type="email" placeholder="enter your email" />
+                <button type="button" class="solid-button">sign up</button>
+              </form>
             </div>
-          </div>
-
-          <div class="offering-card">
-            <div class="offering-image"></div>
-            <div class="offering-tag">artifact</div>
-            <h3 class="offering-title">Mourning Ribbon Tote</h3>
-            <p>heavy canvas / embroidered</p>
-            <div class="offering-footer">
-              <span class="price">$30</span>
-              <button class="ghost-button" type="button">shop</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="mailing-list">
-          <div class="mailing-grid">
-            <div>
-              <p class="eyebrow">mailing list</p>
-              <h3 class="mailing-title">Stay close</h3>
-              <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
-            </div>
-            <form class="mailing-form">
-              <input type="email" placeholder="enter your email" />
-              <button type="button" class="solid-button">sign up</button>
-            </form>
           </div>
         </div>
       </section>
 
       <section class="panel" id="videos" data-testid="videos-large-list">
-        <div class="panel-header">
-          <p class="eyebrow">videos</p>
-          <h2 class="panel-title">Music Videos</h2>
-        </div>
+        <div class="panel-inner">
+          <div class="section-header">
+            <p class="eyebrow">videos</p>
+            <h2 class="section-title">Music Videos</h2>
+          </div>
 
-        <div class="video-list">
-          <a class="video-thumb" href="https://youtu.be/ozxJJVuQWgg" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
-            <div class="video-thumb-inner">
-              <img src="https://img.youtube.com/vi/ozxJJVuQWgg/hqdefault.jpg" alt="Music video thumbnail" />
-              <div class="video-overlay"></div>
-              <div class="watch-badge">
-                <span class="watch-icon">▶</span>
-                <span class="watch-text">watch</span>
+          <div class="video-list">
+            <a class="video-thumb" href="https://youtu.be/ozxJJVuQWgg" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
+              <div class="video-thumb-inner">
+                <img src="https://img.youtube.com/vi/ozxJJVuQWgg/hqdefault.jpg" alt="Music video thumbnail" />
+                <div class="video-overlay"></div>
+                <div class="watch-badge">
+                  <span class="watch-icon">▶</span>
+                  <span class="watch-text">watch</span>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
 
-          <a class="video-thumb" href="https://youtu.be/vb19H-Su5Hs" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
-            <div class="video-thumb-inner">
-              <img src="https://img.youtube.com/vi/vb19H-Su5Hs/hqdefault.jpg" alt="Music video thumbnail" />
-              <div class="video-overlay"></div>
-              <div class="watch-badge">
-                <span class="watch-icon">▶</span>
-                <span class="watch-text">watch</span>
+            <a class="video-thumb" href="https://youtu.be/vb19H-Su5Hs" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
+              <div class="video-thumb-inner">
+                <img src="https://img.youtube.com/vi/vb19H-Su5Hs/hqdefault.jpg" alt="Music video thumbnail" />
+                <div class="video-overlay"></div>
+                <div class="watch-badge">
+                  <span class="watch-icon">▶</span>
+                  <span class="watch-text">watch</span>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
 
-          <a class="video-thumb" href="https://youtu.be/1uEcyNYHbiw" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
-            <div class="video-thumb-inner">
-              <img src="https://img.youtube.com/vi/1uEcyNYHbiw/hqdefault.jpg" alt="Music video thumbnail" />
-              <div class="video-overlay"></div>
-              <div class="watch-badge">
-                <span class="watch-icon">▶</span>
-                <span class="watch-text">watch</span>
+            <a class="video-thumb" href="https://youtu.be/1uEcyNYHbiw" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
+              <div class="video-thumb-inner">
+                <img src="https://img.youtube.com/vi/1uEcyNYHbiw/hqdefault.jpg" alt="Music video thumbnail" />
+                <div class="video-overlay"></div>
+                <div class="watch-badge">
+                  <span class="watch-icon">▶</span>
+                  <span class="watch-text">watch</span>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
 
-          <a class="video-thumb" href="https://youtu.be/18QhmmD4kNg" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
-            <div class="video-thumb-inner">
-              <img src="https://img.youtube.com/vi/18QhmmD4kNg/hqdefault.jpg" alt="Music video thumbnail" />
-              <div class="video-overlay"></div>
-              <div class="watch-badge">
-                <span class="watch-icon">▶</span>
-                <span class="watch-text">watch</span>
+            <a class="video-thumb" href="https://youtu.be/18QhmmD4kNg" target="_blank" rel="noopener noreferrer" aria-label="Open video on YouTube">
+              <div class="video-thumb-inner">
+                <img src="https://img.youtube.com/vi/18QhmmD4kNg/hqdefault.jpg" alt="Music video thumbnail" />
+                <div class="video-overlay"></div>
+                <div class="watch-badge">
+                  <span class="watch-icon">▶</span>
+                  <span class="watch-text">watch</span>
+                </div>
               </div>
-            </div>
-          </a>
-        </div>
+            </a>
+          </div>
 
-        <div class="mailing-list">
-          <div class="mailing-grid">
-            <div>
-              <p class="eyebrow">mailing list</p>
-              <h3 class="mailing-title">Stay close</h3>
-              <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+          <div class="mailing-list">
+            <div class="mailing-grid">
+              <div>
+                <p class="eyebrow">mailing list</p>
+                <h3 class="mailing-title">Stay close</h3>
+                <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+              </div>
+
+              <form class="mailing-form">
+                <input type="email" placeholder="enter your email" />
+                <button type="button" class="solid-button">sign up</button>
+              </form>
             </div>
-            <form class="mailing-form">
-              <input type="email" placeholder="enter your email" />
-              <button type="button" class="solid-button">sign up</button>
-            </form>
           </div>
         </div>
       </section>
 
       <section class="panel" id="contact" data-testid="contact-tab-content">
-        <div class="panel-header">
-          <p class="eyebrow">contact</p>
-          <h2 class="panel-title">Contact Me</h2>
-        </div>
-
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-lines">
-              <p><strong>Management:</strong> management@email.com</p>
-              <p><strong>Booking:</strong> booking@email.com</p>
-              <p><strong>Press:</strong> press@email.com</p>
-              <p><strong>Instagram:</strong> @ALYSSAD</p>
-              <p><strong>TikTok:</strong> @ALYSSAD</p>
-            </div>
+        <div class="panel-inner">
+          <div class="section-header">
+            <p class="eyebrow">contact</p>
+            <h2 class="section-title">Contact Me</h2>
           </div>
 
-          <form class="contact-form">
-            <input type="text" placeholder="name" />
-            <input type="email" placeholder="email" />
-            <textarea placeholder="message"></textarea>
-            <button class="solid-button" type="button">send</button>
-          </form>
-        </div>
-
-        <div class="mailing-list">
-          <div class="mailing-grid">
-            <div>
-              <p class="eyebrow">mailing list</p>
-              <h3 class="mailing-title">Stay close</h3>
-              <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+          <div class="contact-grid">
+            <div class="contact-block">
+              <div class="contact-lines">
+                <p><strong>Management:</strong> management@email.com</p>
+                <p><strong>Booking:</strong> booking@email.com</p>
+                <p><strong>Press:</strong> press@email.com</p>
+                <p><strong>Instagram:</strong> @ALYSSAD</p>
+                <p><strong>TikTok:</strong> @ALYSSAD</p>
+              </div>
             </div>
-            <form class="mailing-form">
-              <input type="email" placeholder="enter your email" />
-              <button type="button" class="solid-button">sign up</button>
+
+            <form class="contact-form">
+              <input type="text" placeholder="name" />
+              <input type="email" placeholder="email" />
+              <textarea placeholder="message"></textarea>
+              <button class="solid-button" type="button">send</button>
             </form>
+          </div>
+
+          <div class="mailing-list">
+            <div class="mailing-grid">
+              <div>
+                <p class="eyebrow">mailing list</p>
+                <h3 class="mailing-title">Stay close</h3>
+                <p class="mailing-copy">Join the mailing list and fall down the rabbit hole with me</p>
+              </div>
+
+              <form class="mailing-form">
+                <input type="email" placeholder="enter your email" />
+                <button type="button" class="solid-button">sign up</button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
@@ -943,8 +1094,8 @@
         panels.forEach((panel) => panel.classList.remove('active'));
 
         button.classList.add('active');
-        const panel = document.getElementById(target);
-        if (panel) panel.classList.add('active');
+        const activePanel = document.getElementById(target);
+        if (activePanel) activePanel.classList.add('active');
       });
     });
   </script>
