@@ -9,11 +9,9 @@
       --bg: #0f0b0d;
       --text: #f3e9e4;
       --muted: #dccbc6;
-      --soft: #cdbbb5;
       --accent: #f5e7e2;
       --line: rgba(255,255,255,0.14);
       --line-soft: rgba(255,255,255,0.08);
-      --shadow: rgba(0,0,0,0.45);
     }
 
     * {
@@ -31,6 +29,11 @@
     body {
       position: relative;
       overflow-x: hidden;
+      cursor: url("cursor.png") 16 16, auto;
+    }
+
+    a, button {
+      cursor: url("cursor.png") 16 16, pointer;
     }
 
     a {
@@ -154,7 +157,6 @@
       text-transform: uppercase;
       letter-spacing: 0.28em;
       font-size: 10px;
-      cursor: pointer;
       transition:
         transform 0.22s ease,
         background 0.22s ease,
@@ -279,6 +281,10 @@
 
     .release-side {
       padding: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
     }
 
     .pill-label {
@@ -331,65 +337,26 @@
     .cover-placeholder {
       position: relative;
       aspect-ratio: 1 / 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
       background: linear-gradient(180deg, #2a1d23 0%, #0d090b 100%);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 0.28em;
-      font-size: 12px;
-      color: #d6c6bf;
+      overflow: hidden;
     }
 
-    .cover-placeholder::before {
+    .cover-placeholder::after {
       content: "";
       position: absolute;
       inset: 0;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.07), transparent 18%),
-        radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), transparent 24%);
-      pointer-events: none;
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.06), transparent 18%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), transparent 22%, transparent 78%, rgba(0,0,0,0.12));
     }
 
-    .cover-placeholder > span:first-child {
-      position: relative;
-      z-index: 2;
-      padding: 0 10px;
+    .cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
-
-    .rabbit-sparkles {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-
-    .cover-link:hover .rabbit-sparkles {
-      opacity: 1;
-    }
-
-    .spark {
-      position: absolute;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.95);
-      box-shadow: 0 0 16px rgba(255,255,255,0.8);
-      animation: twinkle 1.55s infinite ease-in-out;
-    }
-
-    .spark.one { left: 26%; top: 24%; width: 8px; height: 8px; }
-    .spark.two { left: 34%; top: 16%; width: 8px; height: 8px; animation-delay: .18s; }
-    .spark.three { left: 42%; top: 26%; width: 6px; height: 6px; animation-delay: .32s; }
-    .spark.four { left: 49%; top: 21%; width: 6px; height: 6px; animation-delay: .46s; }
-    .spark.five { left: 58%; top: 28%; width: 8px; height: 8px; animation-delay: .62s; }
-    .spark.six { left: 31%; top: 40%; width: 6px; height: 6px; animation-delay: .24s; }
-    .spark.seven { left: 40%; top: 48%; width: 8px; height: 8px; animation-delay: .54s; }
-    .spark.eight { left: 50%; top: 45%; width: 6px; height: 6px; animation-delay: .76s; }
-    .spark.nine { left: 61%; top: 41%; width: 6px; height: 6px; animation-delay: .92s; }
-    .spark.ten { left: 43%; top: 62%; width: 8px; height: 8px; animation-delay: .68s; }
-    .spark.eleven { left: 52%; top: 63%; width: 6px; height: 6px; animation-delay: .84s; }
 
     .listen-label {
       font-size: 10px;
@@ -417,7 +384,6 @@
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.3em;
-      cursor: pointer;
       transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
       backdrop-filter: blur(6px);
     }
@@ -466,14 +432,6 @@
     .contact-form,
     .mailing-list {
       padding: 22px;
-    }
-
-    .show-row,
-    .offering-card,
-    .contact-block,
-    .contact-form,
-    .mailing-list,
-    .release-side {
       background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 18px 60px rgba(0,0,0,0.2);
@@ -562,6 +520,7 @@
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 20px 54px rgba(0,0,0,0.22);
       transition: transform 0.22s ease, opacity 0.22s ease;
+      padding: 0;
     }
 
     .video-thumb:hover {
@@ -698,11 +657,6 @@
       gap: 12px;
     }
 
-    @keyframes twinkle {
-      0%, 100% { transform: scale(0.72); opacity: 0.3; }
-      50% { transform: scale(1.18); opacity: 1; }
-    }
-
     @keyframes fadeUp {
       from {
         opacity: 0;
@@ -788,21 +742,7 @@
               <div class="release-grid">
                 <a class="cover-link" href="#" aria-label="Open COOL GIRL streaming page">
                   <div class="cover-placeholder">
-                    <span>cool girl cover art</span>
-
-                    <div class="rabbit-sparkles" aria-hidden="true">
-                      <span class="spark one"></span>
-                      <span class="spark two"></span>
-                      <span class="spark three"></span>
-                      <span class="spark four"></span>
-                      <span class="spark five"></span>
-                      <span class="spark six"></span>
-                      <span class="spark seven"></span>
-                      <span class="spark eight"></span>
-                      <span class="spark nine"></span>
-                      <span class="spark ten"></span>
-                      <span class="spark eleven"></span>
-                    </div>
+                    <img src="coolgirl.jpg" alt="COOL GIRL cover art" class="cover-img" />
                   </div>
                 </a>
 
